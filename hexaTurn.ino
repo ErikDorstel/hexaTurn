@@ -69,14 +69,14 @@ void loop() {
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]+=1;
-        Serial.print(encNumber[encIndex]); Serial.print(" "); Serial.println(enc.value[encIndex]); } else
+        if (enc.value[encIndex]%4==0) { Serial.print(encNumber[encIndex]); Serial.print(" +1 "); Serial.println(enc.value[encIndex]/4); } } else
 
       if (encValue==enc.nextCCW[encIndex]) {
         if (enc.seqIndex[encIndex]>1) { enc.seqIndex[encIndex]-=1; } else { enc.seqIndex[encIndex]=4; }
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]-=1;
-        Serial.print(encNumber[encIndex]); Serial.print(" "); Serial.println(enc.value[encIndex]); }
+        if (enc.value[encIndex]%4==0) { Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } }
 
       if (buttonValue!=enc.button[encIndex]) { enc.button[encIndex]=buttonValue;
         Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } }
