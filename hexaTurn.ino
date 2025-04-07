@@ -31,7 +31,8 @@ void setup() {
   pinMode(8,INPUT_PULLUP); attachInterrupt(digitalPinToInterrupt(8),isrMCPg,CHANGE);
   pinMode(9,INPUT_PULLUP); attachInterrupt(digitalPinToInterrupt(9),isrMCPh,CHANGE);
   
-  Wire.begin(); Wire1.begin();
+  Wire.begin(); Wire.setClock(17000000UL);
+  Wire1.begin(); Wire1.setClock(17000000UL);
   myMCP0.Init(); myMCP0.setPortMode(0b00000000,A); myMCP0.setPortPullUp(0b11111111,A); myMCP0.setInterruptOnChangePort(0x3F,A);
   myMCP0.setPortMode(0b00000000,B); myMCP0.setPortPullUp(0b11111111,B); myMCP0.setInterruptOnChangePort(0x3F,B); myMCP0.setIntMirror(ON);
   myMCP1.Init(); myMCP1.setPortMode(0b00000000,A); myMCP1.setPortPullUp(0b11111111,A); myMCP1.setInterruptOnChangePort(0x3F,A);
