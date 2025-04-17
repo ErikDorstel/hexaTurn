@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <MCP23017.h>
+#include "eth.h"
 
 MCP23017 myMCP0=MCP23017(&Wire,0x20);
 MCP23017 myMCP1=MCP23017(&Wire,0x21);
@@ -21,6 +22,8 @@ const uint8_t encSequence[6]={1,0,2,3,1,0};
 
 void setup() {
   Serial.begin(115200);
+
+  initEth();
 
   pinMode(2,INPUT_PULLUP); attachInterrupt(digitalPinToInterrupt(2),isrMCPa,CHANGE);
   pinMode(3,INPUT_PULLUP); attachInterrupt(digitalPinToInterrupt(3),isrMCPb,CHANGE);
@@ -55,6 +58,8 @@ void setup() {
     enc.value[encIndex]=0; enc.button[encIndex]=0; } }
 
 void loop() {
+  ethWorker();
+
   if (mcpChange) { mcpChange=false;
 
     for (uint8_t encPart=0;encPart<4;encPart++) {
@@ -70,14 +75,14 @@ void loop() {
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]+=1;
-        if (enc.value[encIndex]%4==0) { Serial.print(encNumber[encIndex]); Serial.print(" +1 "); Serial.println(enc.value[encIndex]/4); } } else
+        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex]+1,1); Serial.print(encNumber[encIndex]); Serial.print(" +1 "); Serial.println(enc.value[encIndex]/4); } } else
 
       if (encValue==enc.nextCCW[encIndex]) {
         if (enc.seqIndex[encIndex]>1) { enc.seqIndex[encIndex]-=1; } else { enc.seqIndex[encIndex]=4; }
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]-=1;
-        if (enc.value[encIndex]%4==0) { Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } }
+        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex]+1,2); Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } }
 
       if (buttonValue!=enc.button[encIndex]) { enc.button[encIndex]=buttonValue;
         Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } }
