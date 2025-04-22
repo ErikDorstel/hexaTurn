@@ -17,5 +17,7 @@ Teensy 4.1 based input unit with 32 rotary encoders
 * GPIO 8 - Int G
 * GPIO 9 - Int H
 #### Development Hardware
+![IMAGE ALT TEXT HERE](documentation/hexaTurn_a.png)
+![IMAGE ALT TEXT HERE](documentation/hexaTurn_b.png)
 #### Schematic
 ![IMAGE ALT TEXT HERE](documentation/hexaTurn.png)
