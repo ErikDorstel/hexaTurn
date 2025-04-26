@@ -22,5 +22,5 @@ void ethSend(uint8_t encNumber,uint8_t value) {
   sendBuffer[0]=encNumber;
   sendBuffer[1]=value;
   Udp.beginPacket(remoteip,4242);
-  Udp.write(sendBuffer);
+  Udp.write(sendBuffer,2);
   Udp.endPacket(); }

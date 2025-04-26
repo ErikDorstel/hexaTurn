@@ -1,3 +1,5 @@
+const bool logging=true;
+
 #include <Wire.h>
 #include <MCP23017.h>
 #include "eth.h"
@@ -21,7 +23,7 @@ const uint8_t encNumber[32]={3,2,1,0,9,8,16,17,27,26,24,25,13,10,11,12,7,6,5,4,1
 const uint8_t encSequence[6]={1,0,2,3,1,0};
 
 void setup() {
-  Serial.begin(115200);
+  if (logging) { Serial.begin(115200); }
 
   initEth();
 
@@ -75,17 +77,19 @@ void loop() {
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]+=1;
-        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex]+1,1); Serial.print(encNumber[encIndex]); Serial.print(" +1 "); Serial.println(enc.value[encIndex]/4); } } else
+        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],1);
+          if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" +1 "); Serial.println(enc.value[encIndex]/4); } } } else
 
       if (encValue==enc.nextCCW[encIndex]) {
         if (enc.seqIndex[encIndex]>1) { enc.seqIndex[encIndex]-=1; } else { enc.seqIndex[encIndex]=4; }
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]-=1;
-        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex]+1,2); Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } }
+        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],2);
+          if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } } }
 
       if (buttonValue!=enc.button[encIndex]) { enc.button[encIndex]=buttonValue;
-        Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } }
+        if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } } }
 
 void isrMCPa() { mcp=4; mcpA=myMCP4.getIntCap(A); mcpB=myMCP4.getIntCap(B); mcpChange=true; }
 void isrMCPb() { mcp=5; mcpA=myMCP5.getIntCap(A); mcpB=myMCP5.getIntCap(B); mcpChange=true; }
