@@ -77,7 +77,7 @@ void loop() {
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]+=1;
-        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],1);
+        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],2);
           if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" +1 "); Serial.println(enc.value[encIndex]/4); } } } else
 
       if (encValue==enc.nextCCW[encIndex]) {
@@ -85,10 +85,11 @@ void loop() {
         enc.nextCW[encIndex]=encSequence[enc.seqIndex[encIndex]+1];
         enc.nextCCW[encIndex]=encSequence[enc.seqIndex[encIndex]-1];
         enc.value[encIndex]-=1;
-        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],2);
+        if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],3);
           if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } } }
 
       if (buttonValue!=enc.button[encIndex]) { enc.button[encIndex]=buttonValue;
+        ethSend(encNumber[encIndex],enc.button[encIndex]);
         if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } } }
 
 void isrMCPa() { mcp=4; mcpA=myMCP4.getIntCap(A); mcpB=myMCP4.getIntCap(B); mcpChange=true; }
