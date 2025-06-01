@@ -60,6 +60,8 @@ void setup() {
     enc.value[encIndex]=0; enc.button[encIndex]=0; } }
 
 void loop() {
+  static uint64_t buttonTimer;
+
   ethWorker();
 
   if (mcpChange) { mcpChange=false;
@@ -88,8 +90,8 @@ void loop() {
         if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],3);
           if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } } }
 
-      if (buttonValue!=enc.button[encIndex]) { enc.button[encIndex]=buttonValue;
-        ethSend(encNumber[encIndex],enc.button[encIndex]);
+      if (buttonValue!=enc.button[encIndex] && millis()>=buttonTimer) { buttonTimer=millis()+100;
+        enc.button[encIndex]=buttonValue; ethSend(encNumber[encIndex],enc.button[encIndex]);
         if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } } }
 
 void isrMCPa() { mcp=4; mcpA=myMCP4.getIntCap(A); mcpB=myMCP4.getIntCap(B); mcpChange=true; }
