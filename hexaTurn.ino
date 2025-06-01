@@ -90,7 +90,7 @@ void loop() {
         if (enc.value[encIndex]%4==0) { ethSend(encNumber[encIndex],3);
           if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" -1 "); Serial.println(enc.value[encIndex]/4); } } }
 
-      if (buttonValue!=enc.button[encIndex] && millis()>=buttonTimer) { buttonTimer=millis()+100;
+      if (buttonValue!=enc.button[encIndex] && millis()>=buttonTimer) { buttonTimer=millis()+50;
         enc.button[encIndex]=buttonValue; ethSend(encNumber[encIndex],enc.button[encIndex]);
         if (logging) { Serial.print(encNumber[encIndex]); Serial.print(" Button "); Serial.println(enc.button[encIndex]); } } } } }
 
